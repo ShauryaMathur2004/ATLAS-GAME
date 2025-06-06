@@ -1,4 +1,4 @@
-# 🌍 Atlas Game - Tkinter Edition
+# 🌍 Atlas Game
 
 A simple and fun word game built with Python and Tkinter where you and the bot take turns naming places. Each new place must start with the last letter of the previous place. Play continues until the bot runs out of options!
 
