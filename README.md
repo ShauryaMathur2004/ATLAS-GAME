@@ -14,7 +14,7 @@ A simple and fun word game built with Python and Tkinter where you and the bot t
 
 ---
 
-![Game Screenshot](screenshot.png)
+![Game Screenshot](Screenshot 2025-06-06 182738.png)
 
 
 > **Important**: Please ensure you use only the `finalall.xlsx` file.  
