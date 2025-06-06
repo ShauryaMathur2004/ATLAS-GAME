@@ -14,6 +14,8 @@ A simple and fun word game built with Python and Tkinter where you and the bot t
 
 ---
 
+![Game Screenshot](screenshot.png)
+
 
 > **Important**: Please ensure you use only the `finalall.xlsx` file.  
 > Other Excel sheets are partial sources or incomplete and **should not** be used for gameplay.
