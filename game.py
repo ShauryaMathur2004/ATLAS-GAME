@@ -1,61 +1,95 @@
-import streamlit as st
+import tkinter as tk
+from tkinter import messagebox
 import pandas as pd
-import random
+from PIL import Image, ImageTk, ImageSequence
 
-# Load data
-@st.cache_data
-def load_data():
-    df = pd.read_excel("worldcities.xlsx")
-    cities = df['city'].dropna().str.title().unique().tolist()
-    states = df['admin_name'].dropna().str.title().unique().tolist()
-    countries = df['country'].dropna().str.title().unique().tolist()
-    return list(set(cities + states + countries))
 
-# Get next place starting with last letter
-def get_next_place(user_input, used, places):
+df = pd.read_excel("finalall.xlsx")
+places = df[df.columns[0]].dropna().astype(str).str.strip().str.title().unique().tolist()
+used = []
+last_bot_place = None  
+
+def is_valid(place):
+    return place.title() in places and place.title() not in used
+
+def get_bot_response(user_input):
     last_letter = user_input.strip()[-1].lower()
     for place in places:
         if place.lower().startswith(last_letter) and place not in used:
             return place
     return None
 
-# Initialize session state
-if 'history' not in st.session_state:
-    st.session_state.history = []
-if 'used' not in st.session_state:
-    st.session_state.used = []
+def play():
+    global last_bot_place
+    user_input = entry.get().strip().title()
+    
+    if not user_input:
+        messagebox.showinfo("Error", "Enter a place!")
+        return
 
-st.title("🌍 ATLAS")
-st.write("Enter any **city, state, or country**, and I'll respond with one starting with the last letter of yours!")
+    if not is_valid(user_input):
+        messagebox.showinfo("Invalid", f"'{user_input}' is not valid or already used.")
+        return
 
-places = load_data()
+    if last_bot_place:
+        expected_start = last_bot_place[-1].lower()
+        if user_input[0].lower() != expected_start:
+            messagebox.showinfo("Wrong Letter", f"❌ '{user_input}' must start with '{expected_start.upper()}' (last letter of '{last_bot_place}')")
+            return
 
-user_input = st.text_input("Your Turn", "")
+    used.append(user_input)
+    log.insert(tk.END, f"You: {user_input}")
 
-if st.button("Submit") or user_input:
-    user_input = user_input.strip().title()
-
-    if user_input not in places:
-        st.warning("⚠️ Not found in known place names. Try another.")
-    elif user_input in st.session_state.used:
-        st.warning("♻️ This place was already used. Try a new one.")
+    bot_response = get_bot_response(user_input)
+    if bot_response:
+        used.append(bot_response)
+        log.insert(tk.END, f"Bot: {bot_response}")
+        log.yview_moveto(1)
+        last_bot_place = bot_response
     else:
-        st.session_state.history.append(("You", user_input))
-        st.session_state.used.append(user_input)
+        log.insert(tk.END, "Bot: I give up! You win 🎉")
+        log.yview_moveto(1)
+        last_bot_place = None
+    entry.delete(0, tk.END)
 
-        ai_choice = get_next_place(user_input, st.session_state.used, places)
-        if ai_choice:
-            st.session_state.history.append(("Bot", ai_choice))
-            st.session_state.used.append(ai_choice)
-        else:
-            st.session_state.history.append(("Bot", "I couldn't think of any! You win 🎉"))
+root = tk.Tk()
+root.title("Atlas Game")
+root.geometry("1920x1080")
 
-# Show history
-st.markdown("### 🕹️ Game History")
-for player, word in st.session_state.history[::-1]:
-    st.markdown(f"**{player}:** {word}")
+bg_img = Image.open("17499.png")
+bg_img = bg_img.resize((1920, 1080), Image.Resampling.LANCZOS)
+bg_photo = ImageTk.PhotoImage(bg_img)
 
-if st.button("🔁 Restart Game"):
-    st.session_state.history = []
-    st.session_state.used = []
-    st.experimental_rerun()
+background_label = tk.Label(root, image=bg_photo)
+background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+main_frame = tk.Frame(root, bg="black")
+main_frame.pack(pady=20)
+
+gif_image = Image.open("Climate Change Earth GIF.gif")
+gif_frames = [ImageTk.PhotoImage(frame.copy().convert("RGBA")) for frame in ImageSequence.Iterator(gif_image)]
+gif_label = tk.Label(main_frame, bg="black")
+gif_label.pack()
+
+def update_gif(ind):
+    frame = gif_frames[ind]
+    gif_label.configure(image=frame)
+    ind = (ind + 1) % len(gif_frames)
+    root.after(100, update_gif, ind)
+
+update_gif(0)
+
+title_label = tk.Label(main_frame, text="A-T-L-A-S : ATLAS!", font=("Arial Black", 28), fg="white", bg="black")
+title_label.pack(pady=10)
+
+entry = tk.Entry(main_frame, font=('Arial', 16), width=40)
+entry.pack(pady=10)
+entry.bind("<Return>", lambda event: play())
+
+submit_btn = tk.Button(main_frame, text="Submit", font=('Arial', 14), command=play)
+submit_btn.pack(pady=5)
+
+log = tk.Listbox(main_frame, width=60, height=20, font=('Courier', 12))
+log.pack(pady=10)
+
+root.mainloop()
