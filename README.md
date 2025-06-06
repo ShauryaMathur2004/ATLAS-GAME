@@ -13,8 +13,8 @@ A simple and fun word game built with Python and Tkinter where you and the bot t
 - If the bot can't find a valid place, **you win! 🎉**
 
 ---
+![Screenshot 2025-06-06 182610](https://github.com/user-attachments/assets/4e989bce-ea22-40f2-8868-2c7a1f314d70)
 
-![Game Screenshot](Screenshot 2025-06-06 182738.png)
 
 
 > **Important**: Please ensure you use only the `finalall.xlsx` file.  
