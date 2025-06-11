@@ -2,9 +2,20 @@ import tkinter as tk
 from tkinter import messagebox
 import pandas as pd
 from PIL import Image, ImageTk, ImageSequence
+import sys
+import os
+
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    try:
+        base_path = sys._MEIPASS  # PyInstaller creates this
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 
-df = pd.read_excel("finalall.xlsx")
+df = pd.read_excel(resource_path("finalall.xlsx"))
 places = df[df.columns[0]].dropna().astype(str).str.strip().str.title().unique().tolist()
 used = []
 last_bot_place = None  
@@ -56,7 +67,7 @@ root = tk.Tk()
 root.title("Atlas Game")
 root.geometry("1920x1080")
 
-bg_img = Image.open("17499.png")
+bg_img = Image.open(resource_path("17499.png"))
 bg_img = bg_img.resize((1920, 1080), Image.Resampling.LANCZOS)
 bg_photo = ImageTk.PhotoImage(bg_img)
 
@@ -66,7 +77,7 @@ background_label.place(x=0, y=0, relwidth=1, relheight=1)
 main_frame = tk.Frame(root, bg="black")
 main_frame.pack(pady=20)
 
-gif_image = Image.open("Climate Change Earth GIF.gif")
+gif_image = Image.open(resource_path("Climate Change Earth GIF.gif"))
 gif_frames = [ImageTk.PhotoImage(frame.copy().convert("RGBA")) for frame in ImageSequence.Iterator(gif_image)]
 gif_label = tk.Label(main_frame, bg="black")
 gif_label.pack()
