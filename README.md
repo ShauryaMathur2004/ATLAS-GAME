@@ -27,7 +27,7 @@ This file contains a **cleaned and complete list of places** for the game.
 
 🎯 Download the `.exe` file (no installation needed):
 
-👉 [Download Atlas Game (EXE)](https://drive.google.com/file/d/1d9jQ0_ZuLfmgxOdHXsJDICVGm4eABUYt/view?usp=drive_link)
+👉 [Download Atlas Game (EXE)](https://drive.google.com/file/d/11kwtS8mVEQYi5qLWFw6lnGj6izUDMDTe/view?usp=drive_link)
 
 - Just **double-click the `.exe`** to play.
 - **No Python** or any setup required.
